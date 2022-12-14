@@ -17,4 +17,7 @@ Original dataframe only had three columns 'name', 'size', and 'price'. I extract
 Scraping data for each kind of liquors took a great amount of time and often caused the program to crash. I saved each dataframe to csv. 
 
 
+### Supporting Docs
+
+All supporting documents are uploaded to the supportingdocs branch. Please refer to the supportingdocs branch [here](https://github.com/jihoonlee-bentley/finalproject/tree/jihoonlee-bentley-supportingdocs).
 
