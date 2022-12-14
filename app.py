@@ -23,7 +23,7 @@ server = app.server
 
 rawurl = 'https://raw.githubusercontent.com/jihoonlee-bentley/finalproject/main/data.csv?token=GHSAT0AAAAAAB4C5CDKK4MVV3RRNC3VUDMYY4ZHHXQ'
 
-df = pd.read_csv('rawurl')
+df = pd.read_csv(rawurl)
 
 
 def generate_table(df, max_rows=10):
