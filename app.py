@@ -21,7 +21,7 @@ app = dash.Dash(__name__, external_stylesheets=stylesheet)
 
 server = app.server
 
-rawurl = 'https://raw.githubusercontent.com/jihoonlee-bentley/finalproject/main/data.csv?token=GHSAT0AAAAAAB4C5CDKK4MVV3RRNC3VUDMYY4ZHHXQ'
+rawurl = 'https://raw.githubusercontent.com/jihoonlee-bentley/finalproject/main/data.csv'
 
 df = pd.read_csv(rawurl)
 
