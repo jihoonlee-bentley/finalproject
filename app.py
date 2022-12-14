@@ -38,7 +38,6 @@ def generate_table(df, max_rows=10):
         ])
     ])
 
-#fig = px.bar(df, x=df['name'], y=df['price'])
 
 
 
@@ -61,7 +60,7 @@ app.layout = html.Div([
         ###### Pick a liquor of your choice and a size you are looking for. The graph 
         ###### will generate options that align with your interest.
         ''',
-        #html.A('Blanchards Website', href='https://blanchards.net'),
+     
     
         
                      )
