@@ -1,6 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-Dashboard created in lecture Week 10
+Created on Mon Dec 12 18:16:11 2022
+
+@author: jihoonlee
 """
+
+
 
 import dash
 from dash import dcc
@@ -11,82 +17,138 @@ import pandas as pd
 
 stylesheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-### pandas dataframe to html table
-def generate_table(dataframe, max_rows=10):
+app = dash.Dash(__name__, external_stylesheets=stylesheet)
+
+server = app.server
+
+
+
+df = pd.read_csv('/Users/jihoonlee/Desktop/final_dataframe.csv')
+df = df.drop('Unnamed: 0', axis=1)
+df['price'] = df['price'].str.replace("$", "")
+df['price'] = df['price'].astype(float)
+
+def generate_table(df, max_rows=10):
     return html.Table([
         html.Thead(
-            html.Tr([html.Th(col) for col in dataframe.columns])
+            html.Tr([html.Th(col) for col in df.columns])
         ),
         html.Tbody([
             html.Tr([
-                html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-            ]) for i in range(min(len(dataframe), max_rows))
+                html.Td(df.iloc[i][col]) for col in df.columns
+            ]) for i in range(min(len(df), max_rows))
         ])
     ])
 
-app = dash.Dash(__name__, external_stylesheets=stylesheet)
-server = app.server
-
-df = pd.DataFrame({
-    "University": ["Bentley", "Boston University", "Boston College",
-                   "Harvard", "Brandeis", "Northeastern"],
-    "Enrollment": [5314, 33720, 14171, 21015, 5825, 22207],
-    "City": ["Waltham", "Boston", "Chestnut Hill",
-             "Cambridge", "Waltham", "Boston"]
-})
-
-fig = px.bar(df, x="University", y="Enrollment", color="City")
+#fig = px.bar(df, x=df['name'], y=df['price'])
 
 
 
 app.layout = html.Div([
-    html.H1('My First MA705 Dashboard!',
+    html.Div([
+        html.H1('Set Up A Home Bar Dashboard',
             style={'textAlign' : 'center'}),
-    html.A('Link to Bentley',
-           href='http://www.bentley.edu',
-           target='_blank'),
-    dcc.Graph(figure=fig,
-              id='plot',
-              style={'width' : '80%',
-                     'align-items' : 'center'}),
-    html.Div([html.H4('Cities to Display:'),
-              dcc.Checklist(
-                  options=[{'label': 'Waltham', 'value': 'Waltham'},
-                           {'label': 'Boston', 'value': 'Boston'},
-                           {'label': 'Chestnut Hill', 'value': 'Chestnut Hill'},
-                           {'label': 'Cambridge', 'value': 'Cambridge'}],
-                  value=['Waltham', 'Boston', 'Cambridge'],
-                  id = 'checklist')],
+        html.P(children='''
+        MA 705 Individual Project: JiHoon Lee
+        '''),
+        html.Div(generate_table(df),id="table_div",
              style={'width' : '50%', 'float' : 'right'}),
-    html.Div(id='table'),
-    html.Br()
+        dcc.Markdown('''
+        ### What do you need to set up a home bar?
+        ###### If you want to set up a home bar and don't know where to start, This
+        ###### dashboard will be a great place to start. This dashboard summarizes 
+        ###### over 500 liquor options that are commonly used for making cocktails. 
+        ###### The dataset was obtained from the Blanchards website in Allston. 
+        ### How to use this dashboard.
+        ###### Pick a liquor of your choice and a size you are looking for. The graph 
+        ###### will generate options that align with your interest.
+        ''',
+        #html.A('Blanchards Website', href='https://blanchards.net'),
+    
+        
+                     )
+    ]),
+    html.Div([
+            html.Div([
+            html.H6('Liquor'),
+            dcc.Dropdown(
+                df['type'].unique(),
+                'Whiskey',
+                id='xaxis-column'
+            ),
+            html.H6('Size'),
+            dcc.Dropdown(
+                df['size'].unique(),
+                '1 L',
+                id='xaxis-type',
+            ),
+        ], style={'width': '48%', 'display': 'inline-block'}),
+
+            
+    ]),
+
+    dcc.Graph(id='indicator-graphic'),
+    
+    
+   
+])
+
+
+@app.callback(
+    Output(component_id = 'xaxis-type', component_property = "options"),
+    [
+    Input(component_id = 'xaxis-column', component_property = "value"),
     ])
 
 
 
-@app.callback(
-    Output("table", "children"),
-    Input("checklist", "value")
-)
-def update_table(cities):
-    x = df[df.City.isin(cities)].sort_values('City')
-    return generate_table(x)
+def update_dropdown(xaxis_column_name):
+    dff = df[df['type'] == xaxis_column_name]
+    return [{'label': i, 'value': i} for i in dff['size'].unique()]
+    
 
+    
 @app.callback(
-    Output("plot", "figure"),
-    Input("checklist", "value")
-)
-def update_plot(cities):
-    df2 = df[df.City.isin(cities)].sort_values('Enrollment', ascending=False)
-    fig = px.bar(df2, x="University", y="Enrollment", color="City")
+    Output('indicator-graphic', 'figure'),
+    Input('xaxis-column', 'value'),
+    Input('xaxis-type', 'value'))
+   
+def update_graph(xaxis_column_name, xaxis_type):
+    dff = df[df['type'] == xaxis_column_name]
+   
+
+
+    fig = px.bar(dff, x=dff[dff['size'] == xaxis_type]['name'], 
+                 y= dff[dff['size'] == xaxis_type]['price'])
+ 
+    
+    fig.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, hovermode='closest')
+    fig.update_xaxes(
+        tickangle = 45,
+        title_text = "Product Name",
+        title_font = {"size": 20},
+        title_standoff = 25)
+
+    fig.update_yaxes(
+        title_text = "Price ($)",
+        title_standoff = 25)
+
+
     return fig
 
+@app.callback(
+    Output('table_div', 'children'),
+    Input('xaxis-column', 'value'),
+    Input('xaxis-type', 'value'))
+   
+
+def update_table(xaxis_column_name, xaxis_type):
+   df2 = df[df['type'] == xaxis_column_name]
+   df3 = df2[df2['size'] == xaxis_type]
+   return generate_table(df3)
 
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
-
-
-
-
+    
+    
