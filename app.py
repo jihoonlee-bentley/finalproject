@@ -42,13 +42,12 @@ def generate_table(df, max_rows=10):
 
 
 app.layout = html.Div([
-    html.Div([
         html.H1('Set Up A Home Bar Dashboard',
             style={'textAlign' : 'center'}),
         html.P(children='''
         MA 705 Individual Project: JiHoon Lee
         ''')])
-])
+
 
 
 
