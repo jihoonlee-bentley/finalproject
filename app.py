@@ -86,6 +86,18 @@ app.layout = html.Div([
     ]),
 
     dcc.Graph(id='indicator-graphic'),
+     html.H6('References'),
+    html.A('Dash Layout Website: https://dash.plotly.com/layout',
+                 href ='https://dash.plotly.com/layout',
+                 target = '_blank'),
+    html.Br(),
+    html.A('Blanchards Website: https://blanchards.net',
+               href='https://blanchards.net',
+               target = '_blank'),
+    html.Br(),
+    html.A('Web Scraping: https://www.youtube.com/watch?v=nCuPv3tf2Hg',
+               href = 'https://www.youtube.com/watch?v=nCuPv3tf2Hg',
+               target = '_blank'),
     
     
    
