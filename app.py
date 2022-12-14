@@ -24,9 +24,7 @@ server = app.server
 
 
 df = pd.read_csv('/Users/jihoonlee/Desktop/final_dataframe.csv')
-df = df.drop('Unnamed: 0', axis=1)
-df['price'] = df['price'].str.replace("$", "")
-df['price'] = df['price'].astype(float)
+
 
 def generate_table(df, max_rows=10):
     return html.Table([
