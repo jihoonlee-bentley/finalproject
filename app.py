@@ -23,7 +23,7 @@ server = app.server
 
 
 
-df = pd.read_csv('/Users/jihoonlee/Desktop/final_dataframe.csv')
+df = pd.read_csv('true_final_dataframe.csv')
 
 
 def generate_table(df, max_rows=10):
