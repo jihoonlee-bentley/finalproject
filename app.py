@@ -21,9 +21,10 @@ app = dash.Dash(__name__, external_stylesheets=stylesheet)
 
 server = app.server
 
+rawurl = 'https://raw.githubusercontent.com/jihoonlee-bentley/finalproject/main/true_final_dataframe.csv?token=GHSAT0AAAAAAB4C5CDK3MUXKV56XZSZLX2UY4ZG3MQ'
 
 
-df = pd.read_csv('true_final_dataframe.csv')
+df = pd.read_csv('rawurl')
 
 
 def generate_table(df, max_rows=10):
